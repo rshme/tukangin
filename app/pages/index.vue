@@ -31,7 +31,7 @@
               <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center lg:justify-start mb-6 md:mb-8">
                 <NuxtLink to="/courses" class="btn-secondary text-base md:text-lg px-6 md:px-8 py-3 md:py-4 w-full sm:w-auto">
                   <BookOpenIcon size="20" class="mr-2" />
-                  Mulai Belajar Gratis
+                  Mulai Belajar
                 </NuxtLink>
                 <NuxtLink to="/auth/register?role=tukang" class="btn-ghost text-base md:text-lg px-6 md:px-8 py-3 md:py-4 w-full sm:w-auto">
                   <UserIcon size="20" class="mr-2" />
@@ -41,10 +41,6 @@
 
               <!-- Trust Indicators -->
               <div class="flex flex-col sm:flex-row sm:flex-wrap items-center justify-center lg:justify-start gap-4 md:gap-6 text-sm opacity-80">
-                <div class="flex items-center">
-                  <CheckIcon size="16" class="mr-2 flex-shrink-0" />
-                  <span>100% Gratis</span>
-                </div>
                 <div class="flex items-center">
                   <CheckIcon size="16" class="mr-2 flex-shrink-0" />
                   <span>Sertifikat Resmi</span>
@@ -118,7 +114,7 @@
               <h3 class="font-semibold text-sm md:text-lg mb-1 md:mb-2">Daftar Gratis</h3>
               <p class="text-text-500 text-xs md:text-sm">Buat akun dan asesmen keahlian awal</p>
               <!-- Connector -->
-              <div class="hidden md:block absolute top-6 md:top-8 left-full w-full h-0.5 bg-primary/30 -translate-x-8"></div>
+              <div class="hidden md:block absolute top-6 md:top-8 left-full w-6/12 h-0.5 bg-primary/30 -translate-x-8"></div>
             </div>
 
             <!-- Step 2 -->
@@ -129,7 +125,7 @@
               <h3 class="font-semibold text-sm md:text-lg mb-1 md:mb-2">Pilih Jalur</h3>
               <p class="text-text-500 text-xs md:text-sm">Tentukan spesialisasi sesuai minat dan bakat</p>
               <!-- Connector -->
-              <div class="hidden md:block absolute top-6 md:top-8 left-full w-full h-0.5 bg-primary/30 -translate-x-8"></div>
+              <div class="hidden md:block absolute top-6 md:top-8 left-full w-6/12 h-0.5 bg-primary/30 -translate-x-8"></div>
             </div>
 
             <!-- Step 3 -->
@@ -140,7 +136,7 @@
               <h3 class="font-semibold text-sm md:text-lg mb-1 md:mb-2">Belajar & Praktik</h3>
               <p class="text-text-500 text-xs md:text-sm">Video, modul, dan praktik langsung</p>
               <!-- Connector -->
-              <div class="hidden md:block absolute top-6 md:top-8 left-full w-full h-0.5 bg-primary/30 -translate-x-8"></div>
+              <div class="hidden md:block absolute top-6 md:top-8 left-full w-6/12 h-0.5 bg-primary/30 -translate-x-8"></div>
             </div>
 
             <!-- Step 4 -->
@@ -194,7 +190,7 @@
               </div>
 
               <!-- Skills Gained -->
-              <div class="flex flex-wrap gap-1 mb-4">
+              <div class="flex flex-wrap gap-1 mb-6">
                 <span
                   v-for="skill in course.skills.slice(0, 3)"
                   :key="skill"
@@ -208,7 +204,6 @@
             <!-- Pricing & CTA -->
             <div class="flex items-center justify-between">
               <div>
-                <div class="text-xl md:text-2xl font-bold text-success">GRATIS</div>
                 <div class="text-xs text-text-500">Sertifikat berbayar</div>
               </div>
               <NuxtLink :to="`/courses/${course.id}`" class="btn-primary text-sm md:text-base px-4 md:px-6 py-2 md:py-3">
@@ -584,7 +579,7 @@ const featuredCourses = [
     id: 3,
     title: 'Sistem Plumbing Modern',
     description: 'Teknik plumbing terkini termasuk sistem air panas dan sanitasi modern.',
-    thumbnail: 'https://picsum.photos/seed/electrical-featured-8/1280/720',
+    thumbnail: 'https://picsum.photos/seed/electrical-featured-1/1280/720',
     level: 'Menengah',
     duration: '5 minggu',
     enrolledCount: 1456,
