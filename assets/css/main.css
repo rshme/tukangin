@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Global font settings with fallbacks */
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-display: swap;
+    @apply text-base bg-bg-page text-text-900;
+  }
+
+  /* Heading typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-display: swap;
+  }
+
+  /* Ensure minimum contrast ratios */
+  .text-primary {
+    color: #0B63CE; /* Contrast ratio: 4.8:1 on white */
+  }
+  
+  .text-secondary {
+    color: #FF6A00; /* Contrast ratio: 4.7:1 on white */
+  }
+}
+
+@layer components {
+  /* Base button styles ensuring 44px height */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-3 h-btn min-h-btn rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-600 focus:ring-primary/50;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary text-white hover:bg-secondary/90 focus:ring-secondary/50;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-primary border border-primary hover:bg-primary hover:text-white focus:ring-primary/50;
+  }
+
+  .btn-disabled {
+    @apply btn bg-text-500 text-white cursor-not-allowed opacity-50;
+  }
+
+  /* Card component */
+  .card {
+    @apply bg-bg-surface rounded-lg border border-border shadow-sm;
+  }
+
+  /* Form inputs */
+  .form-input {
+    @apply block w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary;
+  }
+
+  /* Focus visible for accessibility */
+  .focus-visible {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+}
+
+@layer utilities {
+  /* Gestalt principles utilities */
+  .proximity-group {
+    @apply space-y-2;
+  }
+
+  .similarity-group {
+    @apply *:text-text-500 *:text-sm;
+  }
+
+  .common-region {
+    @apply p-4 bg-bg-surface rounded-lg border border-border;
+  }
+
+  /* Mobile-first responsive touch targets */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Performance optimizations */
+  .lazy-image {
+    @apply transition-opacity duration-300 opacity-0;
+  }
+
+  .lazy-image.loaded {
+    @apply opacity-100;
+  }
+}

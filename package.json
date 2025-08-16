@@ -1,15 +1,21 @@
 {
-  "name": "nuxt-app",
+  "name": "tukang-in",
   "type": "module",
   "private": true,
+  "description": "Platform pelatihan, sertifikasi, dan personal branding untuk tukang informal Indonesia",
+  "version": "1.0.0",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .vue,.js,.ts",
+    "test": "vitest"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@pinia/nuxt": "^0.11.2",
     "@vueuse/nuxt": "^13.6.0",
@@ -18,5 +24,11 @@
     "pinia": "^3.0.3",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "prettier": "^3.2.5",
+    "vitest": "^1.4.0"
   }
 }
