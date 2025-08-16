@@ -254,7 +254,7 @@ const getRedirectPath = (role: string) => {
     case 'tukang':
       return '/tukang/dashboard'
     case 'kontraktor':
-      return '/kontraktor/dashboard'
+      return '/client/dashboard'
     case 'pemilik':
       return '/pemilik/dashboard'
     default:

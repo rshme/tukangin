@@ -808,15 +808,15 @@ const toggleFavorite = (id: number) => {
 }
 
 const viewTukangProfile = (id: number) => {
-  navigateTo(`/kontraktor/tukang/${id}`)
+  navigateTo(`/client/tukang/${id}`)
 }
 
 const contactTukang = (id: number) => {
-  navigateTo(`/kontraktor/chat/${id}`)
+  navigateTo(`/client/chat/${id}`)
 }
 
 const hireTukang = (id: number) => {
-  navigateTo(`/kontraktor/projects/create?tukang=${id}`)
+  navigateTo(`/client/projects/create?tukang=${id}`)
 }
 
 const formatCurrency = (amount: number) => {

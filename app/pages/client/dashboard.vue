@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-heading font-bold text-text-900">
-              Dashboard Kontraktor
+              Dashboard Client
             </h1>
             <p class="text-text-500 mt-1">
               Kelola proyek dan temukan tukang terbaik
@@ -61,7 +61,7 @@
             </div>
 
             <!-- Quick Actions -->
-            <NuxtLink to="/kontraktor/projects/create" class="btn-primary">
+            <NuxtLink to="/client/projects/create" class="btn-primary">
               + Buat Proyek
             </NuxtLink>
           </div>
@@ -70,72 +70,6 @@
     </div>
 
     <div class="container mx-auto px-4 py-8">
-      <!-- Quick Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="card p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-text-500 mb-1">Proyek Aktif</p>
-              <p class="text-2xl font-bold text-text-900">{{ stats.activeProjects }}</p>
-            </div>
-            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-              <BriefcaseIcon size="24" class="text-primary" />
-            </div>
-          </div>
-          <div class="flex items-center mt-4 text-sm">
-            <TrendingUpIcon size="16" class="text-success mr-1" />
-            <span class="text-success">+2 dari bulan lalu</span>
-          </div>
-        </div>
-
-        <div class="card p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-text-500 mb-1">Tukang Favorit</p>
-              <p class="text-2xl font-bold text-text-900">{{ stats.favoriteTukang }}</p>
-            </div>
-            <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
-              <UsersIcon size="24" class="text-secondary" />
-            </div>
-          </div>
-          <div class="flex items-center mt-4 text-sm">
-            <TrendingUpIcon size="16" class="text-success mr-1" />
-            <span class="text-success">+5 dari bulan lalu</span>
-          </div>
-        </div>
-
-        <div class="card p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-text-500 mb-1">Total Pengeluaran</p>
-              <p class="text-2xl font-bold text-text-900">{{ formatCurrency(stats.totalSpent) }}</p>
-            </div>
-            <div class="w-12 h-12 bg-warning/10 rounded-lg flex items-center justify-center">
-              <DollarSignIcon size="24" class="text-warning" />
-            </div>
-          </div>
-          <div class="flex items-center mt-4 text-sm">
-            <TrendingDownIcon size="16" class="text-danger mr-1" />
-            <span class="text-danger">-15% dari bulan lalu</span>
-          </div>
-        </div>
-
-        <div class="card p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-text-500 mb-1">Rating Rata-rata</p>
-              <p class="text-2xl font-bold text-text-900">{{ stats.averageRating }}/5</p>
-            </div>
-            <div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
-              <StarIcon size="24" class="text-success" />
-            </div>
-          </div>
-          <div class="flex items-center mt-4 text-sm">
-            <StarIcon size="16" class="text-warning fill-current mr-1" />
-            <span class="text-text-500">Berdasarkan {{ stats.totalReviews }} ulasan</span>
-          </div>
-        </div>
-      </div>
 
       <div class="grid lg:grid-cols-3 gap-8">
         <!-- Main Content -->
@@ -147,7 +81,7 @@
                 Proyek Aktif
               </h2>
               <NuxtLink 
-                to="/kontraktor/projects" 
+                to="/client/projects" 
                 class="text-primary hover:text-primary-600 text-sm font-medium"
               >
                 Lihat Semua
@@ -234,7 +168,7 @@
               <BriefcaseIcon size="48" class="mx-auto mb-4 opacity-50" />
               <p class="text-lg font-medium mb-2">Belum ada proyek aktif</p>
               <p class="text-sm mb-4">Mulai proyek pertama Anda dengan tukang terpercaya</p>
-              <NuxtLink to="/kontraktor/projects/create" class="btn-primary">
+              <NuxtLink to="/client/projects/create" class="btn-primary">
                 Buat Proyek Baru
               </NuxtLink>
             </div>
@@ -285,7 +219,7 @@
               </NuxtLink>
               
               <NuxtLink 
-                to="/kontraktor/projects/create" 
+                to="/client/projects/create" 
                 class="flex items-center p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors group"
               >
                 <PlusIcon size="20" class="text-text-500 group-hover:text-primary mr-3" />
@@ -293,7 +227,7 @@
               </NuxtLink>
               
               <NuxtLink 
-                to="/kontraktor/tukang/favorites" 
+                to="/client/tukang/favorites" 
                 class="flex items-center p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors group"
               >
                 <HeartIcon size="20" class="text-text-500 group-hover:text-primary mr-3" />
@@ -301,7 +235,7 @@
               </NuxtLink>
               
               <NuxtLink 
-                to="/kontraktor/reports" 
+                to="/client/reports" 
                 class="flex items-center p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors group"
               >
                 <BarChart3Icon size="20" class="text-text-500 group-hover:text-primary mr-3" />
