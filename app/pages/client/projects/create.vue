@@ -1,9 +1,33 @@
 <template>
   <div class="min-h-screen bg-bg-page">
     <!-- Header -->
-    <div class="bg-bg-surface border-b border-border">
-      <div class="container mx-auto px-4 py-6">
-        <div class="flex items-center justify-between">
+    <div class="bg-bg-surface border-b border-border sticky top-0 z-40">
+      <div class="container mx-auto px-4 py-4 lg:py-6">
+        <!-- Mobile Header -->
+        <div class="block lg:hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <NuxtLink to="/client/dashboard" class="p-2 text-text-500 hover:text-text-900 rounded-lg">
+                <ChevronLeftIcon size="20" />
+              </NuxtLink>
+              <div>
+                <h1 class="text-lg font-heading font-bold text-text-900">
+                  Buat Proyek
+                </h1>
+                <p class="text-xs text-text-500">
+                  Langkah {{ currentStep }} dari {{ steps.length }}
+                </p>
+              </div>
+            </div>
+            
+            <button @click="saveDraft" class="btn-ghost text-sm px-3 py-2">
+              Simpan
+            </button>
+          </div>
+        </div>
+
+        <!-- Desktop Header -->
+        <div class="hidden lg:flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-heading font-bold text-text-900">
               Buat Proyek Baru
@@ -25,11 +49,36 @@
       </div>
     </div>
 
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-4 lg:py-8">
       <div class="max-w-4xl mx-auto">
         <!-- Progress Steps -->
-        <div class="mb-8">
-          <div class="flex items-center justify-between mb-4">
+        <div class="mb-6 lg:mb-8">
+          <!-- Mobile Progress -->
+          <div class="block lg:hidden">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-2">
+                <div
+                  v-for="step in steps"
+                  :key="step.id"
+                  class="w-2 h-2 rounded-full"
+                  :class="currentStep >= step.id ? 'bg-primary' : 'bg-gray-300'"
+                ></div>
+              </div>
+              <span class="text-sm text-text-500">{{ currentStep }}/{{ steps.length }}</span>
+            </div>
+            <div class="bg-gray-200 rounded-full h-2 mb-4">
+              <div
+                class="bg-primary h-2 rounded-full transition-all duration-300"
+                :style="{ width: `${(currentStep / steps.length) * 100}%` }"
+              ></div>
+            </div>
+            <h2 class="text-lg font-semibold text-text-900">
+              {{ steps.find(s => s.id === currentStep)?.title || '' }}
+            </h2>
+          </div>
+
+          <!-- Desktop Progress -->
+          <div class="hidden lg:flex items-center justify-between mb-4">
             <div
               v-for="(step, index) in steps"
               :key="step.id"
@@ -64,12 +113,12 @@
 
         <form @submit.prevent="nextStep">
           <!-- Step 1: Basic Information -->
-          <div v-if="currentStep === 1" class="card p-8">
-            <h2 class="text-xl font-heading font-semibold text-text-900 mb-6">
+          <div v-if="currentStep === 1" class="card p-4 lg:p-8">
+            <h2 class="hidden lg:block text-xl font-heading font-semibold text-text-900 mb-6">
               Informasi Dasar Proyek
             </h2>
 
-            <div class="space-y-6">
+            <div class="space-y-4 lg:space-y-6">
               <!-- Project Title -->
               <div>
                 <label for="title" class="block text-sm font-medium text-text-900 mb-2">
@@ -113,22 +162,22 @@
                 <div class="block text-sm font-medium text-text-900 mb-3">
                   Keahlian yang Dibutuhkan *
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   <label
                     v-for="skill in availableSkills"
                     :key="skill.value"
-                    class="flex items-center p-3 border border-border rounded-lg hover:border-primary/50 cursor-pointer transition-colors"
+                    class="flex items-start p-3 border border-border rounded-lg hover:border-primary/50 cursor-pointer transition-colors"
                     :class="{ 'border-primary bg-primary/5': project.requiredSkills.includes(skill.value) }"
                   >
                     <input
                       v-model="project.requiredSkills"
                       :value="skill.value"
                       type="checkbox"
-                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary mr-3"
+                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary mr-3 mt-0.5 flex-shrink-0"
                     />
-                    <div>
-                      <div class="font-medium text-text-900">{{ skill.label }}</div>
-                      <div class="text-xs text-text-500">{{ skill.description }}</div>
+                    <div class="min-w-0">
+                      <div class="font-medium text-text-900 text-sm">{{ skill.label }}</div>
+                      <div class="text-xs text-text-500 mt-1">{{ skill.description }}</div>
                     </div>
                   </label>
                 </div>
@@ -143,7 +192,7 @@
                   id="description"
                   v-model="project.description"
                   required
-                  rows="5"
+                  rows="4"
                   class="form-input"
                   placeholder="Jelaskan detail pekerjaan yang ingin dilakukan, kondisi saat ini, hasil yang diharapkan, dll."
                 ></textarea>
@@ -157,7 +206,7 @@
                 <div class="block text-sm font-medium text-text-900 mb-3">
                   Foto Kondisi Saat Ini
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
                   <div
                     v-for="(image, index) in project.images"
                     :key="index"
@@ -181,8 +230,8 @@
                     v-if="project.images.length < 8"
                     class="aspect-square border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors"
                   >
-                    <CameraIcon size="24" class="text-text-500 mb-2" />
-                    <span class="text-xs text-text-500 text-center">Tambah Foto</span>
+                    <CameraIcon size="20" class="text-text-500 mb-1" />
+                    <span class="text-xs text-text-500 text-center px-1">Tambah Foto</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -200,12 +249,12 @@
           </div>
 
           <!-- Step 2: Location & Timeline -->
-          <div v-if="currentStep === 2" class="card p-8">
-            <h2 class="text-xl font-heading font-semibold text-text-900 mb-6">
+          <div v-if="currentStep === 2" class="card p-4 lg:p-8">
+            <h2 class="hidden lg:block text-xl font-heading font-semibold text-text-900 mb-6">
               Lokasi & Jadwal
             </h2>
 
-            <div class="space-y-6">
+            <div class="space-y-4 lg:space-y-6">
               <!-- Project Location -->
               <div>
                 <label for="address" class="block text-sm font-medium text-text-900 mb-2">
@@ -222,7 +271,7 @@
               </div>
 
               <!-- City -->
-              <div class="grid md:grid-cols-2 gap-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div>
                   <label for="city" class="block text-sm font-medium text-text-900 mb-2">
                     Kota *
@@ -262,7 +311,7 @@
                 <div class="block text-sm font-medium text-text-900 mb-3">
                   Jadwal Proyek *
                 </div>
-                <div class="grid md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                   <div>
                     <label for="startDate" class="block text-sm text-text-500 mb-2">
                       Tanggal Mulai
@@ -296,16 +345,16 @@
                 <label for="duration" class="block text-sm font-medium text-text-900 mb-2">
                   Estimasi Durasi Pengerjaan
                 </label>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3">
                   <input
                     id="duration"
                     v-model="project.estimatedDuration"
                     type="number"
                     min="1"
-                    class="form-input w-24"
+                    class="form-input w-20 flex-shrink-0"
                     placeholder="0"
                   />
-                  <select v-model="project.durationUnit" class="form-input w-32">
+                  <select v-model="project.durationUnit" class="form-input flex-1 max-w-[120px]">
                     <option value="hari">Hari</option>
                     <option value="minggu">Minggu</option>
                     <option value="bulan">Bulan</option>
@@ -321,11 +370,11 @@
                 <div class="block text-sm font-medium text-text-900 mb-3">
                   Tingkat Urgensi
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 gap-3">
                   <label
                     v-for="urgency in urgencyLevels"
                     :key="urgency.value"
-                    class="flex items-center p-4 border border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
+                    class="flex items-center p-3 lg:p-4 border border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
                     :class="{ 'border-primary bg-primary/5': project.urgency === urgency.value }"
                   >
                     <input
@@ -333,11 +382,11 @@
                       :value="urgency.value"
                       type="radio"
                       name="urgency"
-                      class="h-4 w-4 text-primary border-border focus:ring-primary mr-3"
+                      class="h-4 w-4 text-primary border-border focus:ring-primary mr-3 flex-shrink-0"
                     />
-                    <div>
+                    <div class="min-w-0">
                       <div class="font-medium text-text-900">{{ urgency.label }}</div>
-                      <div class="text-xs text-text-500">{{ urgency.description }}</div>
+                      <div class="text-xs text-text-500 mt-1">{{ urgency.description }}</div>
                     </div>
                   </label>
                 </div>
@@ -346,20 +395,20 @@
           </div>
 
           <!-- Step 3: Budget & Requirements -->
-          <div v-if="currentStep === 3" class="card p-8">
-            <h2 class="text-xl font-heading font-semibold text-text-900 mb-6">
+          <div v-if="currentStep === 3" class="card p-4 lg:p-8">
+            <h2 class="hidden lg:block text-xl font-heading font-semibold text-text-900 mb-6">
               Budget & Persyaratan
             </h2>
 
-            <div class="space-y-6">
+            <div class="space-y-4 lg:space-y-6">
               <!-- Budget Type -->
               <div>
                 <div class="block text-sm font-medium text-text-900 mb-3">
                   Tipe Budget *
                 </div>
-                <div class="grid md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-3">
                   <label
-                    class="flex items-center p-4 border border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
+                    class="flex items-center p-3 lg:p-4 border border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
                     :class="{ 'border-primary bg-primary/5': project.budgetType === 'fixed' }"
                   >
                     <input
@@ -367,16 +416,16 @@
                       value="fixed"
                       type="radio"
                       name="budgetType"
-                      class="h-4 w-4 text-primary border-border focus:ring-primary mr-3"
+                      class="h-4 w-4 text-primary border-border focus:ring-primary mr-3 flex-shrink-0"
                     />
                     <div>
                       <div class="font-medium text-text-900">Budget Tetap</div>
-                      <div class="text-xs text-text-500">Saya punya budget yang sudah pasti</div>
+                      <div class="text-xs text-text-500 mt-1">Saya punya budget yang sudah pasti</div>
                     </div>
                   </label>
                   
                   <label
-                    class="flex items-center p-4 border border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
+                    class="flex items-center p-3 lg:p-4 border border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
                     :class="{ 'border-primary bg-primary/5': project.budgetType === 'range' }"
                   >
                     <input
@@ -384,11 +433,11 @@
                       value="range"
                       type="radio"
                       name="budgetType"
-                      class="h-4 w-4 text-primary border-border focus:ring-primary mr-3"
+                      class="h-4 w-4 text-primary border-border focus:ring-primary mr-3 flex-shrink-0"
                     />
                     <div>
                       <div class="font-medium text-text-900">Range Budget</div>
-                      <div class="text-xs text-text-500">Saya punya kisaran budget</div>
+                      <div class="text-xs text-text-500 mt-1">Saya punya kisaran budget</div>
                     </div>
                   </label>
                 </div>
@@ -415,7 +464,7 @@
               </div>
 
               <!-- Budget Range -->
-              <div v-if="project.budgetType === 'range'" class="grid md:grid-cols-2 gap-4">
+              <div v-if="project.budgetType === 'range'" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
                   <label for="budgetMin" class="block text-sm font-medium text-text-900 mb-2">
                     Budget Minimum *
@@ -459,17 +508,18 @@
                 <div class="block text-sm font-medium text-text-900 mb-3">
                   Metode Pembayaran
                 </div>
-                <div class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label
                     v-for="method in paymentMethods"
                     :key="method.value"
-                    class="flex items-center"
+                    class="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
+                    :class="{ 'border-primary/30 bg-primary/5': project.paymentMethods.includes(method.value) }"
                   >
                     <input
                       v-model="project.paymentMethods"
                       :value="method.value"
                       type="checkbox"
-                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary mr-3"
+                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary mr-3 flex-shrink-0"
                     />
                     <span class="text-sm text-text-900">{{ method.label }}</span>
                   </label>
@@ -485,17 +535,18 @@
                   <label
                     v-for="requirement in specialRequirements"
                     :key="requirement.value"
-                    class="flex items-start"
+                    class="flex items-start p-3 border border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
+                    :class="{ 'border-primary/30 bg-primary/5': project.requirements.includes(requirement.value) }"
                   >
                     <input
                       v-model="project.requirements"
                       :value="requirement.value"
                       type="checkbox"
-                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary mr-3 mt-0.5"
+                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary mr-3 mt-0.5 flex-shrink-0"
                     />
-                    <div>
+                    <div class="min-w-0">
                       <span class="text-sm font-medium text-text-900">{{ requirement.label }}</span>
-                      <p class="text-xs text-text-500">{{ requirement.description }}</p>
+                      <p class="text-xs text-text-500 mt-1">{{ requirement.description }}</p>
                     </div>
                   </label>
                 </div>
@@ -509,7 +560,7 @@
                 <textarea
                   id="notes"
                   v-model="project.notes"
-                  rows="4"
+                  rows="3"
                   class="form-input"
                   placeholder="Tambahkan informasi penting lainnya yang perlu diketahui tukang..."
                 ></textarea>
@@ -518,31 +569,31 @@
           </div>
 
           <!-- Step 4: Review & Publish -->
-          <div v-if="currentStep === 4" class="card p-8">
-            <h2 class="text-xl font-heading font-semibold text-text-900 mb-6">
+          <div v-if="currentStep === 4" class="card p-4 lg:p-8">
+            <h2 class="hidden lg:block text-xl font-heading font-semibold text-text-900 mb-6">
               Review & Publikasi
             </h2>
 
             <!-- Project Summary -->
-            <div class="bg-bg-page rounded-lg p-6 mb-6">
+            <div class="bg-bg-page rounded-lg p-4 lg:p-6 mb-4 lg:mb-6">
               <h3 class="font-semibold text-text-900 mb-4">Ringkasan Proyek</h3>
               
-              <div class="grid md:grid-cols-2 gap-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div>
                   <h4 class="font-medium text-text-900 mb-2">{{ project.title }}</h4>
                   <p class="text-sm text-text-500 mb-4">{{ project.description }}</p>
                   
                   <div class="space-y-2">
                     <div class="flex items-center text-sm">
-                      <TagIcon size="16" class="mr-2 text-text-500" />
+                      <TagIcon size="16" class="mr-2 text-text-500 flex-shrink-0" />
                       <span>{{ project.category }}</span>
                     </div>
                     <div class="flex items-center text-sm">
-                      <MapPinIcon size="16" class="mr-2 text-text-500" />
+                      <MapPinIcon size="16" class="mr-2 text-text-500 flex-shrink-0" />
                       <span>{{ project.city }}</span>
                     </div>
                     <div class="flex items-center text-sm">
-                      <CalendarIcon size="16" class="mr-2 text-text-500" />
+                      <CalendarIcon size="16" class="mr-2 text-text-500 flex-shrink-0" />
                       <span>Mulai {{ formatDate(project.startDate) }}</span>
                     </div>
                   </div>
@@ -578,46 +629,50 @@
             </div>
 
             <!-- Visibility Settings -->
-            <div class="mb-6">
+            <div class="mb-4 lg:mb-6">
               <h3 class="font-semibold text-text-900 mb-4">Pengaturan Publikasi</h3>
               
-              <div class="space-y-4">
-                <div class="flex items-center justify-between p-4 border border-border rounded-lg">
-                  <div>
-                    <h4 class="font-medium text-text-900">Tukang yang Bisa Melamar</h4>
-                    <p class="text-sm text-text-500">Pilih siapa yang bisa melihat dan melamar proyek ini</p>
+              <div class="space-y-3 lg:space-y-4">
+                <div class="p-3 lg:p-4 border border-border rounded-lg">
+                  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                    <div>
+                      <h4 class="font-medium text-text-900">Tukang yang Bisa Melamar</h4>
+                      <p class="text-sm text-text-500">Pilih siapa yang bisa melihat dan melamar proyek ini</p>
+                    </div>
+                    <select v-model="project.visibility" class="form-input w-full lg:w-48">
+                      <option value="public">Semua Tukang</option>
+                      <option value="verified">Hanya Tukang Terverifikasi</option>
+                      <option value="certified">Hanya Tukang Bersertifikat</option>
+                      <option value="favorites">Hanya Tukang Favorit</option>
+                    </select>
                   </div>
-                  <select v-model="project.visibility" class="form-input w-48">
-                    <option value="public">Semua Tukang</option>
-                    <option value="verified">Hanya Tukang Terverifikasi</option>
-                    <option value="certified">Hanya Tukang Bersertifikat</option>
-                    <option value="favorites">Hanya Tukang Favorit</option>
-                  </select>
                 </div>
                 
-                <div class="flex items-center justify-between p-4 border border-border rounded-lg">
-                  <div>
-                    <h4 class="font-medium text-text-900">Batas Waktu Lamaran</h4>
-                    <p class="text-sm text-text-500">Berapa lama proyek ini terbuka untuk lamaran</p>
+                <div class="p-3 lg:p-4 border border-border rounded-lg">
+                  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                    <div>
+                      <h4 class="font-medium text-text-900">Batas Waktu Lamaran</h4>
+                      <p class="text-sm text-text-500">Berapa lama proyek ini terbuka untuk lamaran</p>
+                    </div>
+                    <select v-model="project.applicationDeadline" class="form-input w-full lg:w-48">
+                      <option value="3">3 Hari</option>
+                      <option value="7">1 Minggu</option>
+                      <option value="14">2 Minggu</option>
+                      <option value="30">1 Bulan</option>
+                    </select>
                   </div>
-                  <select v-model="project.applicationDeadline" class="form-input w-48">
-                    <option value="3">3 Hari</option>
-                    <option value="7">1 Minggu</option>
-                    <option value="14">2 Minggu</option>
-                    <option value="30">1 Bulan</option>
-                  </select>
                 </div>
               </div>
             </div>
 
             <!-- Terms Acceptance -->
-            <div class="mb-6">
+            <div class="mb-4 lg:mb-6">
               <label class="flex items-start">
                 <input
                   v-model="agreedToTerms"
                   type="checkbox"
                   required
-                  class="h-4 w-4 text-primary border-border rounded focus:ring-primary mr-3 mt-0.5"
+                  class="h-4 w-4 text-primary border-border rounded focus:ring-primary mr-3 mt-0.5 flex-shrink-0"
                 />
                 <div class="text-sm">
                   <span class="text-text-900">Saya setuju dengan </span>
@@ -631,36 +686,73 @@
           </div>
 
           <!-- Navigation Buttons -->
-          <div class="flex justify-between mt-8">
-            <button
-              v-if="currentStep > 1"
-              type="button"
-              @click="prevStep"
-              class="btn-ghost"
-            >
-              <ChevronLeftIcon size="20" class="mr-2" />
-              Sebelumnya
-            </button>
-            <div v-else></div>
+          <div class="mt-6 lg:mt-8">
+            <!-- Mobile Navigation -->
+            <div class="block lg:hidden">
+              <div class="flex items-center justify-between space-x-4">
+                <button
+                  v-if="currentStep > 1"
+                  type="button"
+                  @click="prevStep"
+                  class="flex items-center px-4 py-3 text-text-600 hover:text-text-900 font-medium"
+                >
+                  <ChevronLeftIcon size="18" class="mr-2" />
+                  Kembali
+                </button>
+                <div v-else class="w-20"></div>
 
-            <div class="flex space-x-4">
+                <button
+                  v-if="currentStep < steps.length"
+                  type="submit"
+                  class="flex items-center btn-primary px-6 py-3 flex-1 justify-center max-w-[200px]"
+                >
+                  Lanjut
+                  <ChevronRightIcon size="18" class="ml-2" />
+                </button>
+                <button
+                  v-else
+                  type="button"
+                  @click="publishProject"
+                  :disabled="!agreedToTerms || isPublishing"
+                  class="btn-primary px-6 py-3 flex-1 max-w-[200px]"
+                >
+                  {{ isPublishing ? 'Mengirim...' : 'Publikasikan' }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex justify-between">
               <button
-                v-if="currentStep < steps.length"
-                type="submit"
-                class="btn-primary"
-              >
-                Selanjutnya
-                <ChevronRightIcon size="20" class="ml-2" />
-              </button>
-              <button
-                v-else
+                v-if="currentStep > 1"
                 type="button"
-                @click="publishProject"
-                :disabled="!agreedToTerms || isPublishing"
-                class="btn-primary"
+                @click="prevStep"
+                class="btn-ghost"
               >
-                {{ isPublishing ? 'Mempublikasi...' : 'Publikasikan Proyek' }}
+                <ChevronLeftIcon size="20" class="mr-2" />
+                Sebelumnya
               </button>
+              <div v-else></div>
+
+              <div class="flex space-x-4">
+                <button
+                  v-if="currentStep < steps.length"
+                  type="submit"
+                  class="btn-primary"
+                >
+                  Selanjutnya
+                  <ChevronRightIcon size="20" class="ml-2" />
+                </button>
+                <button
+                  v-else
+                  type="button"
+                  @click="publishProject"
+                  :disabled="!agreedToTerms || isPublishing"
+                  class="btn-primary"
+                >
+                  {{ isPublishing ? 'Mempublikasi...' : 'Publikasikan Proyek' }}
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -841,7 +933,7 @@ const publishProject = async () => {
     await new Promise(resolve => setTimeout(resolve, 2000))
     
     alert('Proyek berhasil dipublikasi!')
-    navigateTo('/client/projects')
+    navigateTo('/client/dashboard')
   } catch (error) {
     console.error('Failed to publish project:', error)
     alert('Gagal mempublikasi proyek. Silakan coba lagi.')

@@ -1,9 +1,99 @@
 <template>
   <div class="min-h-screen bg-bg-page">
     <!-- Header -->
-    <div class="bg-bg-surface border-b border-border">
-      <div class="container mx-auto px-4 py-6">
-        <div class="flex items-center justify-between">
+    <div class="bg-bg-surface border-b border-border sticky top-0 z-40">
+      <div class="container mx-auto px-4 py-4 sm:py-6">
+        <!-- Mobile Header -->
+        <div class="block lg:hidden">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h1 class="text-xl font-heading font-bold text-text-900">
+                Cari Tukang
+              </h1>
+              <p class="text-sm text-text-500 mt-1">
+                {{ filteredTukang.length }} tukang ditemukan
+              </p>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+              <!-- Mobile View Toggle -->
+              <div class="flex items-center bg-bg-page rounded-lg p-1">
+                <button
+                  @click="viewMode = 'grid'"
+                  class="p-1.5 rounded-md transition-colors"
+                  :class="viewMode === 'grid' ? 'bg-bg-surface text-primary shadow-sm' : 'text-text-500'"
+                >
+                  <GridIcon size="16" />
+                </button>
+                <button
+                  @click="viewMode = 'list'"
+                  class="p-1.5 rounded-md transition-colors"
+                  :class="viewMode === 'list' ? 'bg-bg-surface text-primary shadow-sm' : 'text-text-500'"
+                >
+                  <ListIcon size="16" />
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mobile Search & Filter Bar -->
+          <div class="flex items-center space-x-3">
+            <!-- Search Input -->
+            <div class="flex-1 relative">
+              <SearchIcon size="18" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-500" />
+              <input
+                v-model="filters.search"
+                type="text"
+                class="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                placeholder="Cari tukang atau keahlian..."
+              />
+            </div>
+            
+            <!-- Mobile Filter Button -->
+            <button
+              @click="showMobileFilters = true"
+              class="flex items-center px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium relative"
+            >
+              <FilterIcon size="16" class="mr-2" />
+              Filter
+              <span v-if="activeFiltersCount > 0" class="absolute -top-1 -right-1 w-5 h-5 bg-danger text-white text-xs rounded-full flex items-center justify-center">
+                {{ activeFiltersCount }}
+              </span>
+            </button>
+            
+            <!-- Mobile Sort -->
+            <div class="relative">
+              <button
+                @click="showMobileSort = !showMobileSort"
+                class="flex items-center px-4 py-2.5 border border-border rounded-lg text-sm font-medium"
+              >
+                <ArrowUpDownIcon size="16" class="mr-2" />
+                Sort
+              </button>
+              
+              <!-- Sort Dropdown -->
+              <div
+                v-if="showMobileSort"
+                class="absolute right-0 top-full mt-2 w-48 bg-white border border-border rounded-lg shadow-lg z-50"
+              >
+                <div class="p-2">
+                  <button
+                    v-for="option in sortOptions"
+                    :key="option.value"
+                    @click="sortBy = option.value; showMobileSort = false"
+                    class="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-bg-hover transition-colors"
+                    :class="sortBy === option.value ? 'bg-primary/10 text-primary font-medium' : 'text-text-900'"
+                  >
+                    {{ option.label }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop Header -->
+        <div class="hidden lg:flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-heading font-bold text-text-900">
               Cari Tukang
@@ -33,7 +123,7 @@
             </div>
             
             <!-- Sort -->
-            <select v-model="sortBy" class="form-input py-2 text-sm">
+            <select v-model="sortBy" class="form-input py-2 text-sm min-w-[180px]">
               <option value="rating">Rating Tertinggi</option>
               <option value="price-low">Harga Terendah</option>
               <option value="price-high">Harga Tertinggi</option>
@@ -45,11 +135,11 @@
       </div>
     </div>
 
-    <div class="container mx-auto px-4 py-8">
-      <div class="grid lg:grid-cols-4 gap-8">
-        <!-- Filters Sidebar -->
-        <div class="lg:col-span-1">
-          <div class="card p-6 sticky top-8">
+    <div class="container mx-auto px-4 py-4 lg:py-8">
+      <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+        <!-- Desktop Filters Sidebar -->
+        <div class="hidden lg:block lg:col-span-1">
+          <div class="card p-6 sticky top-24">
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-lg font-heading font-semibold text-text-900">
                 Filter
@@ -62,15 +152,15 @@
               </button>
             </div>
 
-            <!-- Search -->
+            <!-- Desktop Search -->
             <div class="mb-6">
-              <label for="search" class="block text-sm font-medium text-text-900 mb-2">
+              <label for="desktop-search" class="block text-sm font-medium text-text-900 mb-2">
                 Cari Nama/Keahlian
               </label>
               <div class="relative">
                 <SearchIcon size="20" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-500" />
                 <input
-                  id="search"
+                  id="desktop-search"
                   v-model="filters.search"
                   type="text"
                   class="form-input pl-10"
@@ -97,9 +187,9 @@
 
             <!-- Skills -->
             <div class="mb-6">
-              <label class="block text-sm font-medium text-text-900 mb-3">
+              <div class="block text-sm font-medium text-text-900 mb-3">
                 Keahlian
-              </label>
+              </div>
               <div class="space-y-2 max-h-48 overflow-y-auto">
                 <label
                   v-for="skill in skillOptions"
@@ -120,9 +210,9 @@
 
             <!-- Price Range -->
             <div class="mb-6">
-              <label class="block text-sm font-medium text-text-900 mb-3">
+              <div class="block text-sm font-medium text-text-900 mb-3">
                 Tarif per Jam (Rp)
-              </label>
+              </div>
               <div class="space-y-3">
                 <div class="flex items-center space-x-3">
                   <input
@@ -152,9 +242,9 @@
 
             <!-- Rating -->
             <div class="mb-6">
-              <label class="block text-sm font-medium text-text-900 mb-3">
+              <div class="block text-sm font-medium text-text-900 mb-3">
                 Rating Minimum
-              </label>
+              </div>
               <div class="space-y-2">
                 <label
                   v-for="rating in [5, 4, 3, 2, 1]"
@@ -185,9 +275,9 @@
 
             <!-- Availability -->
             <div class="mb-6">
-              <label class="block text-sm font-medium text-text-900 mb-3">
+              <div class="block text-sm font-medium text-text-900 mb-3">
                 Ketersediaan
-              </label>
+              </div>
               <div class="space-y-2">
                 <label class="flex items-center">
                   <input
@@ -221,9 +311,9 @@
 
             <!-- Certificates -->
             <div class="mb-6">
-              <label class="block text-sm font-medium text-text-900 mb-3">
+              <div class="block text-sm font-medium text-text-900 mb-3">
                 Sertifikasi
-              </label>
+              </div>
               <div class="space-y-2">
                 <label class="flex items-center">
                   <input
@@ -248,8 +338,8 @@
 
         <!-- Results -->
         <div class="lg:col-span-3">
-          <!-- Results Header -->
-          <div class="flex items-center justify-between mb-6">
+          <!-- Desktop Results Header -->
+          <div class="hidden lg:flex items-center justify-between mb-6">
             <div>
               <p class="text-text-900 font-medium">
                 {{ filteredTukang.length }} tukang ditemukan
@@ -258,114 +348,107 @@
                 Hasil pencarian di {{ filters.location || 'semua lokasi' }}
               </p>
             </div>
-            
-            <!-- Mobile Filter Toggle -->
-            <button
-              @click="showMobileFilters = true"
-              class="lg:hidden btn-ghost"
-            >
-              <FilterIcon size="20" class="mr-2" />
-              Filter
-            </button>
           </div>
 
           <!-- Results Grid/List -->
-          <div v-if="viewMode === 'grid'" class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div v-if="viewMode === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
             <div
               v-for="tukang in paginatedTukang"
               :key="tukang.id"
-              class="card p-6 hover:shadow-lg transition-shadow cursor-pointer"
+              class="card p-4 lg:p-6 hover:shadow-lg transition-shadow cursor-pointer"
               @click="viewTukangProfile(tukang.id)"
             >
               <!-- Tukang Header -->
-              <div class="flex items-start space-x-4 mb-4">
+              <div class="flex items-start space-x-3 lg:space-x-4 mb-3 lg:mb-4">
                 <div class="relative flex-shrink-0">
                   <img
                     :src="tukang.avatar"
                     :alt="tukang.name"
-                    class="w-16 h-16 rounded-full object-cover"
+                    class="w-12 h-12 lg:w-16 lg:h-16 rounded-full object-cover"
                   />
                   <div
                     v-if="tukang.isOnline"
-                    class="absolute -bottom-1 -right-1 w-5 h-5 bg-success border-2 border-white rounded-full"
+                    class="absolute -bottom-1 -right-1 w-4 h-4 lg:w-5 lg:h-5 bg-success border-2 border-white rounded-full"
                   ></div>
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-start justify-between">
                     <div>
-                      <h3 class="font-semibold text-text-900 mb-1">{{ tukang.name }}</h3>
-                      <p class="text-sm text-text-500 mb-2">{{ tukang.primarySkill }}</p>
+                      <h3 class="font-semibold text-text-900 mb-1 text-sm lg:text-base">{{ tukang.name }}</h3>
+                      <p class="text-xs lg:text-sm text-text-500 mb-2">{{ tukang.primarySkill }}</p>
                     </div>
                     <button
                       @click.stop="toggleFavorite(tukang.id)"
                       class="p-1 text-text-400 hover:text-danger transition-colors"
                     >
                       <HeartIcon 
-                        size="20" 
+                        size="18" 
                         :class="{ 'fill-current text-danger': tukang.isFavorite }"
                       />
                     </button>
                   </div>
                   
                   <!-- Rating & Experience -->
-                  <div class="flex items-center space-x-4 text-sm">
+                  <div class="flex items-center space-x-3 lg:space-x-4 text-xs lg:text-sm">
                     <div class="flex items-center space-x-1">
-                      <StarIcon size="14" class="text-warning fill-current" />
+                      <StarIcon size="12" class="text-warning fill-current" />
                       <span class="font-medium text-text-900">{{ tukang.rating }}</span>
                       <span class="text-text-500">({{ tukang.reviewCount }})</span>
                     </div>
-                    <span class="text-text-500">{{ tukang.experience }} tahun</span>
+                    <span class="text-text-500">{{ tukang.experience }}th</span>
                   </div>
                 </div>
               </div>
 
-              <!-- Skills -->
-              <div class="mb-4">
-                <div class="flex flex-wrap gap-2">
+              <!-- Skills - Mobile optimized -->
+              <div class="mb-3 lg:mb-4">
+                <div class="flex flex-wrap gap-1 lg:gap-2">
                   <span
-                    v-for="skill in tukang.skills.slice(0, 3)"
+                    v-for="skill in tukang.skills.slice(0, 2)"
                     :key="skill"
                     class="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
                   >
                     {{ skill }}
                   </span>
                   <span
-                    v-if="tukang.skills.length > 3"
+                    v-if="tukang.skills.length > 2"
                     class="px-2 py-1 bg-gray-100 text-text-500 text-xs rounded-full"
                   >
-                    +{{ tukang.skills.length - 3 }}
+                    +{{ tukang.skills.length - 2 }}
                   </span>
                 </div>
               </div>
 
               <!-- Location & Price -->
-              <div class="flex items-center justify-between text-sm mb-4">
-                <div class="flex items-center text-text-500">
-                  <MapPinIcon size="14" class="mr-1" />
-                  <span>{{ tukang.location }}</span>
-                  <span class="mx-2">•</span>
-                  <span>{{ tukang.distance }} km</span>
+              <div class="flex flex-wrap items-center justify-between text-xs lg:text-sm mb-3 lg:mb-4">
+                <div class="md:w-full flex items-center text-text-500">
+                  <MapPinIcon size="12" class="mr-1" />
+                  <span class="truncate">{{ tukang.location }}</span>
+                  <span class="mx-1">•</span>
+                  <span>{{ tukang.distance }}km</span>
                 </div>
-                <div class="text-right">
-                  <p class="font-semibold text-text-900">{{ formatCurrency(tukang.hourlyRate) }}/jam</p>
+                <div class="md:mt-2 text-right">
+                  <p class="font-semibold text-text-900 text-xs lg:text-sm">{{ formatCurrency(tukang.hourlyRate) }}/jam</p>
                 </div>
               </div>
 
               <!-- Badges -->
-              <div class="flex items-center space-x-2 mb-4">
+              <div class="flex items-center space-x-1 lg:space-x-2 mb-3 lg:mb-4">
                 <span
                   v-if="tukang.isVerified"
                   class="inline-flex items-center px-2 py-1 bg-success/10 text-success text-xs rounded-full"
                 >
-                  <CheckIcon size="12" class="mr-1" />
-                  Terverifikasi
+                  <CheckIcon size="10" class="mr-1" />
+                  <span class="hidden sm:inline">Terverifikasi</span>
+                  <span class="sm:hidden">✓</span>
                 </span>
                 <span
                   v-if="tukang.isCertified"
                   class="inline-flex items-center px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
                 >
-                  <AwardIcon size="12" class="mr-1" />
-                  Bersertifikat
+                  <AwardIcon size="10" class="mr-1" />
+                  <span class="hidden sm:inline">Bersertifikat</span>
+                  <span class="sm:hidden">⭐</span>
                 </span>
               </div>
 
@@ -373,14 +456,14 @@
               <div class="flex items-center space-x-2">
                 <button
                   @click.stop="contactTukang(tukang.id)"
-                  class="flex-1 btn-ghost text-sm"
+                  class="flex-1 btn-ghost text-xs lg:text-sm py-2"
                 >
-                  <MessageCircleIcon size="16" class="mr-2" />
+                  <MessageCircleIcon size="14" class="mr-1 lg:mr-2" />
                   Chat
                 </button>
                 <button
                   @click.stop="hireTukang(tukang.id)"
-                  class="flex-1 btn-primary text-sm"
+                  class="flex-1 btn-primary text-xs lg:text-sm py-2"
                 >
                   Hire
                 </button>
@@ -525,31 +608,37 @@
           </div>
 
           <!-- Pagination -->
-          <div v-if="totalPages > 1" class="flex items-center justify-center space-x-2 mt-8">
+          <div v-if="totalPages > 1" class="flex items-center justify-center space-x-1 lg:space-x-2 mt-6 lg:mt-8">
             <button
               @click="currentPage--"
               :disabled="currentPage === 1"
-              class="p-2 text-text-500 hover:text-text-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="p-2 text-text-500 hover:text-text-900 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg hover:bg-bg-hover"
             >
               <ChevronLeftIcon size="20" />
             </button>
             
             <div class="flex items-center space-x-1">
+              <!-- Desktop pagination -->
               <button
                 v-for="page in visiblePages"
                 :key="page"
                 @click="currentPage = page"
-                class="px-3 py-2 text-sm rounded-lg transition-colors"
+                class="hidden lg:flex px-3 py-2 text-sm rounded-lg transition-colors"
                 :class="page === currentPage ? 'bg-primary text-white' : 'text-text-600 hover:bg-bg-hover'"
               >
                 {{ page }}
               </button>
+              
+              <!-- Mobile pagination - show current page and total -->
+              <span class="lg:hidden px-3 py-2 text-sm text-text-600">
+                {{ currentPage }} / {{ totalPages }}
+              </span>
             </div>
             
             <button
               @click="currentPage++"
               :disabled="currentPage === totalPages"
-              class="p-2 text-text-500 hover:text-text-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="p-2 text-text-500 hover:text-text-900 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg hover:bg-bg-hover"
             >
               <ChevronRightIcon size="20" />
             </button>
@@ -562,28 +651,212 @@
     <div
       v-if="showMobileFilters"
       class="fixed inset-0 z-50 lg:hidden"
-      @click="showMobileFilters = false"
     >
-      <div class="absolute inset-0 bg-black/50"></div>
-      <div
-        class="absolute inset-y-0 left-0 w-80 bg-bg-surface shadow-xl overflow-y-auto"
-        @click.stop
-      >
-        <div class="p-6">
-          <div class="flex items-center justify-between mb-6">
+      <div class="absolute inset-0 bg-black/50" @click="showMobileFilters = false"></div>
+      <div class="absolute inset-y-0 right-0 w-full max-w-sm bg-bg-surface shadow-xl">
+        <div class="flex flex-col h-full">
+          <!-- Header -->
+          <div class="flex items-center justify-between p-4 border-b border-border bg-white">
             <h2 class="text-lg font-heading font-semibold text-text-900">
-              Filter
+              Filter Pencarian
             </h2>
             <button
               @click="showMobileFilters = false"
-              class="text-text-500 hover:text-text-900"
+              class="p-2 text-text-500 hover:text-text-900 rounded-lg hover:bg-bg-hover"
             >
-              <XIcon size="24" />
+              <XIcon size="20" />
             </button>
           </div>
           
-          <!-- Mobile filter content (same as desktop) -->
-          <!-- ... (content would be same as desktop filters) ... -->
+          <!-- Filter Content -->
+          <div class="flex-1 overflow-y-auto">
+            <div class="p-4 space-y-6">
+              <!-- Location -->
+              <div>
+                <label for="mobile-location" class="block text-sm font-medium text-text-900 mb-2">
+                  Lokasi
+                </label>
+                <select id="mobile-location" v-model="filters.location" class="form-input">
+                  <option value="">Semua Lokasi</option>
+                  <option value="jakarta">Jakarta</option>
+                  <option value="bandung">Bandung</option>
+                  <option value="surabaya">Surabaya</option>
+                  <option value="medan">Medan</option>
+                  <option value="yogyakarta">Yogyakarta</option>
+                  <option value="semarang">Semarang</option>
+                </select>
+              </div>
+
+              <!-- Skills -->
+              <div>
+                <div class="block text-sm font-medium text-text-900 mb-3">
+                  Keahlian
+                </div>
+                <div class="space-y-2 max-h-48 overflow-y-auto">
+                  <label
+                    v-for="skill in skillOptions"
+                    :key="skill.value"
+                    class="flex items-center"
+                  >
+                    <input
+                      v-model="filters.skills"
+                      :value="skill.value"
+                      type="checkbox"
+                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary"
+                    />
+                    <span class="ml-2 text-sm text-text-900">{{ skill.label }}</span>
+                    <span class="ml-auto text-xs text-text-500">({{ skill.count }})</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Price Range -->
+              <div>
+                <div class="block text-sm font-medium text-text-900 mb-3">
+                  Tarif per Jam (Rp)
+                </div>
+                <div class="space-y-3">
+                  <div class="grid grid-cols-2 gap-3">
+                    <input
+                      v-model="filters.priceMin"
+                      type="number"
+                      min="0"
+                      step="5000"
+                      class="form-input"
+                      placeholder="Minimum"
+                    />
+                    <input
+                      v-model="filters.priceMax"
+                      type="number"
+                      min="0"
+                      step="5000"
+                      class="form-input"
+                      placeholder="Maksimum"
+                    />
+                  </div>
+                  <div class="flex items-center justify-between text-xs text-text-500">
+                    <span>Rp 30.000</span>
+                    <span>Rp 150.000</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rating -->
+              <div>
+                <div class="block text-sm font-medium text-text-900 mb-3">
+                  Rating Minimum
+                </div>
+                <div class="space-y-2">
+                  <label
+                    v-for="rating in [5, 4, 3, 2, 1]"
+                    :key="rating"
+                    class="flex items-center"
+                  >
+                    <input
+                      v-model="filters.minRating"
+                      :value="rating"
+                      type="radio"
+                      name="mobileMinRating"
+                      class="h-4 w-4 text-primary border-border focus:ring-primary"
+                    />
+                    <div class="ml-2 flex items-center">
+                      <div class="flex items-center">
+                        <StarIcon
+                          v-for="i in 5"
+                          :key="i"
+                          size="14"
+                          :class="i <= rating ? 'text-warning fill-current' : 'text-gray-300'"
+                        />
+                      </div>
+                      <span class="ml-2 text-sm text-text-900">{{ rating }}.0+</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Availability -->
+              <div>
+                <div class="block text-sm font-medium text-text-900 mb-3">
+                  Ketersediaan
+                </div>
+                <div class="space-y-2">
+                  <label class="flex items-center">
+                    <input
+                      v-model="filters.availability"
+                      value="immediate"
+                      type="checkbox"
+                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary"
+                    />
+                    <span class="ml-2 text-sm text-text-900">Tersedia Segera</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      v-model="filters.availability"
+                      value="thisweek"
+                      type="checkbox"
+                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary"
+                    />
+                    <span class="ml-2 text-sm text-text-900">Minggu Ini</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      v-model="filters.availability"
+                      value="thismonth"
+                      type="checkbox"
+                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary"
+                    />
+                    <span class="ml-2 text-sm text-text-900">Bulan Ini</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Certificates -->
+              <div>
+                <div class="block text-sm font-medium text-text-900 mb-3">
+                  Sertifikasi
+                </div>
+                <div class="space-y-2">
+                  <label class="flex items-center">
+                    <input
+                      v-model="filters.certified"
+                      type="checkbox"
+                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary"
+                    />
+                    <span class="ml-2 text-sm text-text-900">Bersertifikat</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      v-model="filters.verified"
+                      type="checkbox"
+                      class="h-4 w-4 text-primary border-border rounded focus:ring-primary"
+                    />
+                    <span class="ml-2 text-sm text-text-900">Terverifikasi</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Footer Actions -->
+          <div class="p-4 border-t border-border bg-white">
+            <div class="flex items-center space-x-3">
+              <button
+                @click="clearFilters"
+                class="flex-1 btn-ghost"
+              >
+                Reset Filter
+              </button>
+              <button
+                @click="showMobileFilters = false"
+                class="flex-1 btn-primary"
+              >
+                Terapkan Filter
+                <span v-if="activeFiltersCount > 0" class="ml-2 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                  {{ activeFiltersCount }}
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -601,6 +874,7 @@ declare function navigateTo(url: string): any
 const viewMode = ref<'grid' | 'list'>('grid')
 const sortBy = ref('rating')
 const showMobileFilters = ref(false)
+const showMobileSort = ref(false)
 const currentPage = ref(1)
 const itemsPerPage = 12
 
@@ -616,6 +890,15 @@ const filters = reactive({
   certified: false,
   verified: false
 })
+
+// Sort options
+const sortOptions = [
+  { value: 'rating', label: 'Rating Tertinggi' },
+  { value: 'price-low', label: 'Harga Terendah' },
+  { value: 'price-high', label: 'Harga Tertinggi' },
+  { value: 'experience', label: 'Pengalaman Terbanyak' },
+  { value: 'distance', label: 'Jarak Terdekat' }
+]
 
 // Skills options
 const skillOptions = [
@@ -687,8 +970,121 @@ const allTukang = [
     isVerified: false,
     isCertified: true,
     isFavorite: false
+  },
+  {
+    id: 4,
+    name: 'Junaedi Kosasih',
+    avatar: 'https://picsum.photos/seed/rina-puspita-4/150/150',
+    primarySkill: 'Tukang Cat',
+    skills: ['Pengecatan', 'Finishing', 'Dekoratif'],
+    rating: 4.6,
+    reviewCount: 12,
+    experience: 5,
+    location: 'Depok',
+    distance: 12.3,
+    hourlyRate: 50000,
+    dailyRate: 400000,
+    description: 'Spesialis pengecatan interior dan eksterior dengan perhatian tinggi pada detail finishing dan warna.',
+    isOnline: false,
+    isVerified: true,
+    isCertified: false,
+    isFavorite: false
+  },
+  {
+    id: 5,
+    name: 'Hendra Prakoso',
+    avatar: 'https://picsum.photos/seed/hendra-prakoso-5/150/150',
+    primarySkill: 'Tukang Kayu',
+    skills: ['Carpentry', 'Furniture', 'Joinery'],
+    rating: 4.9,
+    reviewCount: 45,
+    experience: 15,
+    location: 'Bekasi',
+    distance: 20.1,
+    hourlyRate: 90000,
+    dailyRate: 700000,
+    description: 'Pengrajin kayu berpengalaman, membuat furniture custom dan struktur kayu untuk bangunan.',
+    isOnline: true,
+    isVerified: true,
+    isCertified: true,
+    isFavorite: true
+  },
+  {
+    id: 6,
+    name: 'Erwin Sutrisna',
+    avatar: 'https://picsum.photos/seed/mawar-sari-6/150/150',
+    primarySkill: 'Tukang Finishing',
+    skills: ['Wall Preparation', 'Plastering', 'Tiling'],
+    rating: 4.5,
+    reviewCount: 9,
+    experience: 4,
+    location: 'Tangerang',
+    distance: 18.4,
+    hourlyRate: 48000,
+    dailyRate: 380000,
+    description: 'Cepat dan rapi dalam pekerjaan finishing, ahli memasang keramik dan plesteran halus.',
+    isOnline: true,
+    isVerified: false,
+    isCertified: false,
+    isFavorite: false
+  },
+  {
+    id: 7,
+    name: 'Dedi Kurniawan',
+    avatar: 'https://picsum.photos/seed/dedi-kurniawan-7/150/150',
+    primarySkill: 'Mandor',
+    skills: ['Manajemen Proyek', 'Konstruksi', 'Quality Control'],
+    rating: 4.8,
+    reviewCount: 60,
+    experience: 20,
+    location: 'Bogor',
+    distance: 35.0,
+    hourlyRate: 120000,
+    dailyRate: 900000,
+    description: 'Mandor berpengalaman memimpin tim dan memastikan proyek selesai tepat waktu sesuai spesifikasi.',
+    isOnline: false,
+    isVerified: true,
+    isCertified: true,
+    isFavorite: false
+  },
+  {
+    id: 8,
+    name: 'Rian Budiman',
+    avatar: 'https://picsum.photos/seed/siti-rahma-8/150/150',
+    primarySkill: 'Tukang Plumbing',
+    skills: ['Plumbing', 'Water Systems', 'Leak Repair'],
+    rating: 4.7,
+    reviewCount: 22,
+    experience: 7,
+    location: 'Jakarta Pusat',
+    distance: 4.5,
+    hourlyRate: 60000,
+    dailyRate: 480000,
+    description: 'Profesional plumbing yang handal untuk instalasi dan maintenance sistem air rumah dan gedung.',
+    isOnline: true,
+    isVerified: true,
+    isCertified: false,
+    isFavorite: true
+  },
+  {
+    id: 9,
+    name: 'Anton Wijaya',
+    avatar: 'https://picsum.photos/seed/anton-wijaya-9/150/150',
+    primarySkill: 'Tukang Listrik Senior',
+    skills: ['Instalasi Listrik', 'Automasi', 'Panel & Solar'],
+    rating: 4.9,
+    reviewCount: 80,
+    experience: 18,
+    location: 'Jakarta Utara',
+    distance: 7.3,
+    hourlyRate: 110000,
+    dailyRate: 800000,
+    description: 'Tukang listrik senior dengan pengalaman proyek residensial dan komersial, termasuk instalasi panel dan sistem solar.',
+    isOnline: false,
+    isVerified: true,
+    isCertified: true,
+    isFavorite: false
   }
-  // Add more mock data...
 ]
 
 // Computed properties
@@ -784,6 +1180,19 @@ const visiblePages = computed(() => {
   return pages
 })
 
+// Active filters count for mobile badge
+const activeFiltersCount = computed(() => {
+  let count = 0
+  if (filters.location) count++
+  if (filters.skills.length > 0) count++
+  if (filters.priceMin || filters.priceMax) count++
+  if (filters.minRating) count++
+  if (filters.availability.length > 0) count++
+  if (filters.certified) count++
+  if (filters.verified) count++
+  return count
+})
+
 // Methods
 const clearFilters = () => {
   Object.assign(filters, {
@@ -816,7 +1225,7 @@ const contactTukang = (id: number) => {
 }
 
 const hireTukang = (id: number) => {
-  navigateTo(`/client/projects/create?tukang=${id}`)
+  navigateTo(`/client/projects/create`)
 }
 
 const formatCurrency = (amount: number) => {
