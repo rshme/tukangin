@@ -608,7 +608,7 @@ const canSend = computed(() => {
 
 // Methods
 const goBack = () => {
-  navigateTo('/chat')
+  navigateTo(`/tukang/${currentChatId.value}`)
 }
 
 const selectChat = (chatId: number) => {

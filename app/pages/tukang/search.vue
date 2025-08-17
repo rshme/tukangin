@@ -808,11 +808,11 @@ const toggleFavorite = (id: number) => {
 }
 
 const viewTukangProfile = (id: number) => {
-  navigateTo(`/client/tukang/${id}`)
+  navigateTo(`/tukang/${id}`)
 }
 
 const contactTukang = (id: number) => {
-  navigateTo(`/client/chat/${id}`)
+  navigateTo(`/chat/${id}`)
 }
 
 const hireTukang = (id: number) => {

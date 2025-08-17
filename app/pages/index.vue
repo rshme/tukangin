@@ -33,7 +33,7 @@
                   <BookOpenIcon size="20" class="mr-2" />
                   Mulai Belajar
                 </NuxtLink>
-                <NuxtLink to="/auth/register?role=tukang" class="btn-ghost text-base md:text-lg px-6 md:px-8 py-3 md:py-4 w-full sm:w-auto">
+                <NuxtLink to="/auth/register" class="flex items-center text-base md:text-lg px-6 md:px-8 py-3 md:py-2 w-full sm:w-auto border border-white hover:bg-white hover:text-black rounded-lg transition-all duration-300">
                   <UserIcon size="20" class="mr-2" />
                   Daftar Sekarang
                 </NuxtLink>
@@ -68,11 +68,11 @@
                 
                 <div class="grid grid-cols-2 gap-3 md:gap-4 text-center">
                   <div class="bg-white/10 rounded-lg p-3 md:p-4">
-                    <div class="text-lg md:text-xl lg:text-2xl font-bold text-accent">Rp 350K</div>
+                    <div class="text-lg md:text-xl lg:text-2xl font-bold text-accent">Rp 3.500K</div>
                     <div class="text-xs opacity-80">Sebelum</div>
                   </div>
                   <div class="bg-accent/20 rounded-lg p-3 md:p-4">
-                    <div class="text-lg md:text-xl lg:text-2xl font-bold text-accent">Rp 800K</div>
+                    <div class="text-lg md:text-xl lg:text-2xl font-bold text-accent">Rp 7.500K</div>
                     <div class="text-xs opacity-80">Sesudah</div>
                   </div>
                 </div>
@@ -80,7 +80,7 @@
 
               <!-- Floating Elements -->
               <div class="absolute -top-2 -right-2 md:-top-4 md:-right-4 bg-success text-white px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold shadow-lg">
-                +128% Peningkatan
+                +114% Peningkatan
               </div>
               <div class="absolute -bottom-2 -left-2 md:-bottom-4 md:-left-4 bg-accent text-primary px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold shadow-lg">
                 1,200+ Tersertifikasi
@@ -302,7 +302,7 @@
 
         <!-- CTA to See More Stories -->
         <div class="text-center mt-6 md:mt-8">
-          <NuxtLink to="/success-stories" class="btn-ghost inline-flex items-center text-sm md:text-base">
+          <NuxtLink to="#" class="btn-ghost inline-flex items-center text-sm md:text-base">
             Baca Lebih Banyak Kisah Sukses
             <ChevronRightIcon size="20" class="ml-2" />
           </NuxtLink>
@@ -478,9 +478,6 @@
           <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
             <NuxtLink to="/courses" class="btn-secondary text-sm md:text-lg px-6 md:px-8 py-3 md:py-4 w-full sm:w-auto">
               Mulai Belajar Sekarang
-            </NuxtLink>
-            <NuxtLink to="/auth/register?role=tukang" class="btn-ghost text-sm md:text-lg px-6 md:px-8 py-3 md:py-4 w-full sm:w-auto">
-              Daftar Gratis
             </NuxtLink>
           </div>
           

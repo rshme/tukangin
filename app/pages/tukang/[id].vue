@@ -659,7 +659,7 @@ const getRatingCount = (star: number) => {
 }
 
 const goBack = () => {
-  window.history.back()
+  navigateTo(`/tukang/search`)
 }
 
 const toggleFavorite = () => {
