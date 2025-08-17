@@ -126,7 +126,7 @@
               <h3 class="font-heading font-semibold text-lg text-text-900">
                 Pekerjaan untuk Anda
               </h3>
-              <NuxtLink to="/tukang/jobs" class="text-primary text-sm hover:text-primary-600">
+              <NuxtLink to="/jobs/search" class="text-primary text-sm hover:text-primary-600">
                 Lihat Semua
               </NuxtLink>
             </div>
@@ -228,7 +228,7 @@
               <h3 class="font-heading font-semibold text-text-900">
                 Pelatihan Direkomendasikan
               </h3>
-              <NuxtLink to="/pelatihan" class="text-primary text-sm hover:text-primary-600">
+              <NuxtLink to="/courses" class="text-primary text-sm hover:text-primary-600">
                 Lihat Semua
               </NuxtLink>
             </div>
@@ -271,12 +271,7 @@
                 <span class="text-sm text-text-900">Kelola Portofolio</span>
               </NuxtLink>
               
-              <NuxtLink to="/tukang/certificates" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                <AwardIcon size="20" class="text-success mr-3" />
-                <span class="text-sm text-text-900">Sertifikat Saya</span>
-              </NuxtLink>
-              
-              <NuxtLink to="/pelatihan" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors">
+              <NuxtLink to="/courses" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors">
                 <BookOpenIcon size="20" class="text-accent mr-3" />
                 <span class="text-sm text-text-900">Cari Pelatihan</span>
               </NuxtLink>
@@ -488,11 +483,11 @@ const getActivityIcon = (type: string) => {
 }
 
 const navigateToJob = (jobId: string) => {
-  navigateTo(`/tukang/jobs/${jobId}`)
+  navigateTo(`/jobs/search/${jobId}`)
 }
 
 const navigateToTraining = (trainingId: string) => {
-  navigateTo(`/pelatihan/${trainingId}`)
+  navigateTo(`/courses/${trainingId}`)
 }
 
 const shareProfile = () => {
