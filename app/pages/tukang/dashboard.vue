@@ -549,7 +549,7 @@ const getActivityIcon = (type: string) => {
 };
 
 const navigateToJob = (jobId: string) => {
-  navigateTo(`/jobs/search/${jobId}`);
+  navigateTo(`/jobs/${jobId}`);
 };
 
 const navigateToTraining = (trainingId: string) => {
