@@ -227,7 +227,7 @@
               </NuxtLink>
               
               <NuxtLink 
-                to="/client/tukang/favorites" 
+                to="#" 
                 class="flex items-center p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors group"
               >
                 <HeartIcon size="20" class="text-text-500 group-hover:text-primary mr-3" />
@@ -235,7 +235,7 @@
               </NuxtLink>
               
               <NuxtLink 
-                to="/client/reports" 
+                to="#" 
                 class="flex items-center p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors group"
               >
                 <BarChart3Icon size="20" class="text-text-500 group-hover:text-primary mr-3" />
@@ -287,12 +287,12 @@
                 </div>
                 
                 <div class="flex items-center space-x-2 mt-3">
-                  <button class="flex-1 btn-ghost text-sm">
+                  <NuxtLink to="/tukang/1" class="flex-1 btn-ghost text-sm">
                     Lihat Profil
-                  </button>
-                  <button class="flex-1 btn-primary text-sm">
+                  </NuxtLink>
+                  <NuxtLink to="/chat/1" class="flex-1 btn-primary text-sm">
                     Hubungi
-                  </button>
+                  </NuxtLink>
                 </div>
               </div>
             </div>
