@@ -33,7 +33,7 @@
                   <BookOpenIcon size="20" class="mr-2" />
                   Mulai Belajar
                 </NuxtLink>
-                <NuxtLink to="/auth/register" class="flex items-center text-base md:text-lg px-6 md:px-8 py-3 md:py-2 w-full sm:w-auto border border-white hover:bg-white hover:text-black rounded-lg transition-all duration-300">
+                <NuxtLink to="/auth/register" class="flex items-center justify-center text-base md:text-lg px-6 md:px-8 py-3 md:py-2 w-full sm:w-auto border border-white hover:bg-white hover:text-black rounded-lg transition-all duration-300 text-center">
                   <UserIcon size="20" class="mr-2" />
                   Daftar Sekarang
                 </NuxtLink>
